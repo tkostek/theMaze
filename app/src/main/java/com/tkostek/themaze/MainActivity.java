@@ -29,5 +29,6 @@ public class MainActivity extends AppCompatActivity {
         bmpMan.addImage(BitmapFactory.decodeResource(getResources(), R.drawable.horizontal), "horizontalWall1");
         bmpMan.addImage(BitmapFactory.decodeResource(getResources(), R.drawable.vertical), "verticalWall1");
         bmpMan.addImage(BitmapFactory.decodeResource(getResources(), R.drawable.floor), "floor1");
+        bmpMan.addImage(BitmapFactory.decodeResource(getResources(), R.drawable.hero1), "hero1");
     }
 }

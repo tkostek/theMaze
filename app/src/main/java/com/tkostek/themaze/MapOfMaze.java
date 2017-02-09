@@ -101,7 +101,6 @@ public class MapOfMaze {
 
         for(Wall w: options){
 
-            Log.d("random wall", w.getX() + " " + w.getY() + " " + w.getDirection());
 
             Chamber tmpChamber = getChamber(w.getX(), w.getY());
             Chamber tmpNeighbour = tmpChamber.getNeighbour(w.getDirection());
@@ -110,8 +109,6 @@ public class MapOfMaze {
                 continue;
             }
 
-            Log.d("find", tmpChamber.getX() + " " + tmpChamber.getY() + " " + groups.find(tmpChamber.getX(), tmpChamber.getY()));
-            Log.d("find", tmpNeighbour.getX() + " " + tmpNeighbour.getY() + " " + groups.find(tmpNeighbour.getX(), tmpNeighbour.getY()));
             if(groups.find(tmpChamber.getX(), tmpChamber.getY()) == groups.find(tmpNeighbour.getX(), tmpNeighbour.getY())) {
                 continue;
             }

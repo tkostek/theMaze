@@ -54,7 +54,14 @@ public class Chamber {
             canvas.drawBitmap((Bitmap) mgr.getImage().get("verticalWall1"), leftCorner, null);
         }
 
-        Log.d("print", (getX() * size) + " " + (getY() * size) + " " + getCrossing(0).getState() + " " + getCrossing(1).getState() + " " + getCrossing(2).getState() + " " + getCrossing(3).getState());
+        for(Dweller d: inside){
+            Log.d("player", Boolean.toString(d.isVisible()));
+            if(!d.isVisible())
+                continue;
+            Matrix displayDweller = new Matrix();
+            displayDweller.postTranslate(getY() * size + d.getDispX() * size, getX() * size + d.getDispY() * size);
+            canvas.drawBitmap((Bitmap) mgr.getImage().get(d.getPictureName()), displayDweller, null);
+        }
     }
 
     public MapOfMaze getMyMap() {
