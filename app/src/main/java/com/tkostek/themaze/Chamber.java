@@ -15,10 +15,8 @@ public class Chamber {
 
     private Chamber[] neighbour = new Chamber[4];
     private Crossing[] crossing = new Crossing[4];
-    private int X, Y;
+    private int X, Y, screenX, screenY;
     private MapOfMaze myMap;
-
-
     private ArrayList<Dweller> inside = new ArrayList<Dweller>();
 
     public Chamber(MapOfMaze myMap, int X, int Y){
@@ -28,14 +26,19 @@ public class Chamber {
     }
 
     public void printOnScreen(Canvas canvas, BitmapManager mgr){
+
         int size = ((Bitmap) mgr.getImage().get("floor1")).getHeight();
         int thickness = ((Bitmap) mgr.getImage().get("horizontalWall1")).getHeight();
+        setScreenX(getY() * size);
+        setScreenY(getX() * size);
+
         Matrix leftCorner   = new Matrix();
         Matrix rightSide    = new Matrix();
         Matrix downSide     = new Matrix();
-        leftCorner.postTranslate(getY() * size, getX() * size);
-        downSide.postTranslate(getY() * size, getX() * size + size - thickness);
-        rightSide.postTranslate(getY() * size + size - thickness, getX() * size);
+
+        leftCorner.postTranslate(getScreenX(), getScreenY());
+        downSide.postTranslate(getScreenX(), getScreenY() + size - thickness);
+        rightSide.postTranslate(getScreenX() + size - thickness, getScreenY());
         canvas.drawBitmap((Bitmap) mgr.getImage().get("floor1"), leftCorner, null);
 
         if(getCrossing(0).getState() == 0){
@@ -59,9 +62,25 @@ public class Chamber {
             if(!d.isVisible())
                 continue;
             Matrix displayDweller = new Matrix();
-            displayDweller.postTranslate(getY() * size + d.getDispX() * size, getX() * size + d.getDispY() * size);
+            displayDweller.postTranslate(getScreenX() + d.getDispX() * size, getScreenY() + d.getDispY() * size);
             canvas.drawBitmap((Bitmap) mgr.getImage().get(d.getPictureName()), displayDweller, null);
         }
+    }
+
+    public int getScreenX() {
+        return screenX;
+    }
+
+    public void setScreenX(int screenX) {
+        this.screenX = screenX;
+    }
+
+    public int getScreenY() {
+        return screenY;
+    }
+
+    public void setScreenY(int screenY) {
+        this.screenY = screenY;
     }
 
     public MapOfMaze getMyMap() {

@@ -20,7 +20,7 @@ public class Perimeter extends View {
 
     public Perimeter(Context context, AttributeSet attrs) {
         super(context, attrs);
-        range = 6;
+        range = 3;
     }
 
     public BitmapManager getBmpMan() {

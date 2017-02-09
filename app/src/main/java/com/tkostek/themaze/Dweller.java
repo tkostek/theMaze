@@ -1,5 +1,7 @@
 package com.tkostek.themaze;
 
+import android.util.Log;
+
 /**
  * Created by tkostek on 04.02.17.
  */
@@ -7,16 +9,10 @@ package com.tkostek.themaze;
 public class Dweller {
 
     private Chamber location;
-
-    public Chamber getLocation() {
-        return location;
-    }
-
-    public float dispX, dispY;
-
-    public boolean visible;
-
-    public String pictureName;
+    private float dispX, dispY;
+    private boolean visible;
+    private String pictureName;
+    private Perimeter around;
 
     public Dweller(Chamber location, Perimeter around, BitmapManager mgr){
         setAround(around);
@@ -36,7 +32,9 @@ public class Dweller {
         location.getInside().add(this);
     }
 
-    private Perimeter around;
+    public Chamber getLocation() {
+        return location;
+    }
 
     public Perimeter getAround() {
         return around;
@@ -91,22 +89,28 @@ public class Dweller {
         }
 
         setLocation(getLocation().getNeighbour(direction));
+        getAround().invalidate();
+        Log.d("move", "OK");
         return true;
     }
 
     public boolean tryUp(){
+        Log.d("move", "tryUp");
         return tryMove(0);
     }
 
     public boolean tryRight(){
+        Log.d("move", "tryRight");
         return tryMove(1);
     }
 
     public boolean tryDown(){
+        Log.d("move", "tryDown");
         return tryMove(2);
     }
 
     public boolean tryLeft(){
+        Log.d("move", "tryLeft");
         return tryMove(3);
     }
 }
