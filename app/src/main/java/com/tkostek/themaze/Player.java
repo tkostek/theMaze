@@ -6,11 +6,13 @@ package com.tkostek.themaze;
 
 public class Player extends Dweller {
 
+    Statistics statistics;
     public Player (Chamber location){
         super(location);
         setVisible(true);
         setDispX((float)25 / 100);
         setDispY((float)25 / 100);
         setPictureName("hero1");
+        statistics = new Statistics;
     }
 }
