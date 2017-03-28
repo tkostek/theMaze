@@ -61,14 +61,11 @@ public class Perimeter {
         Point origin = new Point(screenPosition);
         int coord[] = new int[2];
         getDrawHere().getLocationOnScreen(coord);
-        Log.d("drawhereLoc ", coord[0] + " " + coord[1]);
         origin.x += coord[1];
         origin.y += coord[0];
         int cellSize = ((Bitmap)getDrawHere().getBmpMan().getImage().get("floor1")).getHeight();
         myPosition.x = getLocation().getScreenX(cellSize, location.getX() - getRange(), location.getY() - getRange(), origin);
         myPosition.y = getLocation().getScreenY(cellSize, location.getX() - getRange(), location.getY() - getRange(), origin);
-        Log.d("position ", myPosition.x + " " + myPosition.y);
-        Log.d("click ", clickX + " " + clickY);
         return Math.hypot(Math.abs(myPosition.x - clickX), Math.abs(myPosition.y - clickY));
     }
 }

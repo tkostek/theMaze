@@ -85,6 +85,18 @@ public class MapOfMaze {
         mazeBuilder();
     }
 
+    private ArrayList<Chamber> getChamberList(){
+        ArrayList result = new ArrayList<>();
+        for(int i = 0; i < height; i++){
+            for(int j = 0; j < width; j++){
+                result.add(getChamber(i, j));
+            }
+        }
+
+        Collections.shuffle(result);
+        return result;
+    }
+
     private void mazeBuilder(){
 
         ArrayList<Wall> options = new ArrayList<>();
@@ -118,6 +130,18 @@ public class MapOfMaze {
             tmpNeighbour.getCrossing((w.getDirection() + 2) % 4).setState(1);
 
         }
+    }
+
+    public Chamber preferableFree(){
+        ArrayList<Chamber> options = getChamberList();
+
+        for(Chamber chamber: options){
+            if(chamber.getInside().size() == 0){
+                return chamber;
+            }
+        }
+
+        return options.get(0);
     }
 
     public int getWidth() {

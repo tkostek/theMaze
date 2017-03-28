@@ -8,9 +8,13 @@ public class Item extends Dweller {
 
     public Item(Chamber location){
         super(location);
+        setVisible(true);
     }
 
-    public void collision(Player player){
-
+    public void collision(Dweller dweller){
+        super.collision(dweller);
+        if(dweller instanceof Player) {
+            setLocation(null);
+        }
     }
 }

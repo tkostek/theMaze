@@ -7,12 +7,16 @@ package com.tkostek.themaze;
 public class Player extends Dweller {
 
     Statistics statistics;
+
     public Player (Chamber location){
         super(location);
         setVisible(true);
-        setDispX((float)25 / 100);
-        setDispY((float)25 / 100);
+        setDispMiddle();
         setPictureName("hero1");
-        statistics = new Statistics;
+        statistics = new Statistics();
+    }
+
+    public Statistics getStatistics() {
+        return statistics;
     }
 }

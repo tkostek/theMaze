@@ -28,7 +28,9 @@ public class Dweller {
             oldLocation.getInside().remove(this);
         }
         getAround().setLocation(location);
-        location.getInside().add(this);
+        if(location != null){
+            location.getInside().add(this);
+        }
     }
 
     public Chamber getLocation() {
@@ -41,6 +43,11 @@ public class Dweller {
 
     public void setAround(Perimeter around) {
         this.around = around;
+    }
+
+    public void setDispMiddle(){
+        setDispX((float)25 / 100);
+        setDispY((float)25 / 100);
     }
 
     public float getDispX() {
@@ -87,6 +94,7 @@ public class Dweller {
             return false;
         }
 
+        collide(getLocation().getNeighbour(direction));
         setLocation(getLocation().getNeighbour(direction));
         getAround().redraw();
         return true;
@@ -106,5 +114,16 @@ public class Dweller {
 
     public boolean tryLeft(){
         return tryMove(3);
+    }
+
+    public void collision(Dweller dweller){
+
+    }
+
+    public void collide(Chamber chamber){
+        for(Dweller dweller : chamber.getInside()){
+            dweller.collision(this);
+            collision(dweller);
+        }
     }
 }

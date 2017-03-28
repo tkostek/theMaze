@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity{
         mainDisplayer = (Displayer) findViewById(displayer1);
         mainDisplayer.setBmpMan(getBmpMan());//error
 
-        MapOfMaze maze = new MapOfMaze(9, 9);
+        MapOfMaze maze = new MapOfMaze(20, 20);
 
         players.add(new Player(maze.getChamber(2, 2)));
         players.add(new Player(maze.getChamber(7, 7)));
@@ -38,6 +38,10 @@ public class MainActivity extends AppCompatActivity{
         mainDisplayer.newScreen(players.get(1).getAround(), new Point(330,0));
 
         mDetector = new GestureDetectorCompat(this, new MyGestureListener());
+
+        Gold.spawn(maze);
+        Gold.spawn(maze);
+        Gold.spawn(maze);
     }
 
     @Override
@@ -99,6 +103,7 @@ public class MainActivity extends AppCompatActivity{
         bmpMan.addImage(BitmapFactory.decodeResource(getResources(), R.drawable.vertical), "verticalWall1");
         bmpMan.addImage(BitmapFactory.decodeResource(getResources(), R.drawable.floor), "floor1");
         bmpMan.addImage(BitmapFactory.decodeResource(getResources(), R.drawable.hero1), "hero1");
+        bmpMan.addImage(BitmapFactory.decodeResource(getResources(), R.drawable.coin1), "coin1");
     }
 
     public ArrayList<Player> getPlayers() {
