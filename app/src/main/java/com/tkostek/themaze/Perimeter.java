@@ -1,34 +1,37 @@
 package com.tkostek.themaze;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.util.AttributeSet;
+import android.graphics.Point;
+import android.util.Log;
 import android.view.View;
 
 /**
  * Created by tkostek on 05.02.17.
  */
 
-public class Perimeter extends View {
+public class Perimeter {
 
     private Chamber location;
     private int range;
+    private Displayer drawHere;
 
-    BitmapManager bmpMan;
 
-    public Perimeter(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        range = 3;
+    public Perimeter() {
+        setRange(3);
     }
 
-    public BitmapManager getBmpMan() {
-        return bmpMan;
+    public void redraw(){
+        getDrawHere().invalidate();
     }
 
-    public void setBmpMan(BitmapManager bmpMan) {
-        this.bmpMan = bmpMan;
+    public Displayer getDrawHere() {
+        return drawHere;
+    }
+
+    public void setDrawHere(Displayer drawHere) {
+        this.drawHere = drawHere;
     }
 
     public Chamber getLocation() {
@@ -47,15 +50,25 @@ public class Perimeter extends View {
         this.range = range;
     }
 
-    @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
-        for(int i = 0; i < getLocation().getMyMap().getHeight(); i++){
-            for(int j = 0; j < getLocation().getMyMap().getWidth(); j++){
-                if(Math.pow(i - getLocation().getX(),2) + Math.pow(j - getLocation().getY(),2) <= Math.pow(getRange(),2)){
-                    getLocation().getMyMap().getChamber(i, j).printOnScreen(canvas, getBmpMan());
-                }
+    public double calculateDistance(double clickX, double clickY){
+        Point myPosition =  new Point(0, 0);
+        Point screenPosition = new Point(0,0);
+        for(int i = 0; i < getDrawHere().getScreens().size(); i++){
+            if(getDrawHere().getScreens().get(i) == this){
+                screenPosition = getDrawHere().getLocation().get(i);
             }
         }
+        Point origin = new Point(screenPosition);
+        int coord[] = new int[2];
+        getDrawHere().getLocationOnScreen(coord);
+        Log.d("drawhereLoc ", coord[0] + " " + coord[1]);
+        origin.x += coord[1];
+        origin.y += coord[0];
+        int cellSize = ((Bitmap)getDrawHere().getBmpMan().getImage().get("floor1")).getHeight();
+        myPosition.x = getLocation().getScreenX(cellSize, location.getX() - getRange(), location.getY() - getRange(), origin);
+        myPosition.y = getLocation().getScreenY(cellSize, location.getX() - getRange(), location.getY() - getRange(), origin);
+        Log.d("position ", myPosition.x + " " + myPosition.y);
+        Log.d("click ", clickX + " " + clickY);
+        return Math.hypot(Math.abs(myPosition.x - clickX), Math.abs(myPosition.y - clickY));
     }
 }

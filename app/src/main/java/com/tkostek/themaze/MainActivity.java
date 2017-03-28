@@ -1,6 +1,7 @@
 package com.tkostek.themaze;
 
 import android.graphics.BitmapFactory;
+import android.graphics.Point;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,11 +12,12 @@ import android.view.MotionEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import static com.tkostek.themaze.R.id.perimeter1;
+import static com.tkostek.themaze.R.id.displayer1;
 
 public class MainActivity extends AppCompatActivity{
 
     private BitmapManager bmpMan;
+    private Displayer mainDisplayer;
     private GestureDetectorCompat mDetector;
     private ArrayList<Player> players = new ArrayList<>();
 
@@ -23,9 +25,18 @@ public class MainActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setBmpMan(new BitmapManager());
-        MapOfMaze maze = new MapOfMaze(9, 9);
         setContentView(R.layout.activity_main);
-        players.add(new Player(maze.getChamber(4, 4), (Perimeter) findViewById(perimeter1), getBmpMan()));
+        mainDisplayer = (Displayer) findViewById(displayer1);
+        mainDisplayer.setBmpMan(getBmpMan());//error
+
+        MapOfMaze maze = new MapOfMaze(9, 9);
+
+        players.add(new Player(maze.getChamber(2, 2)));
+        players.add(new Player(maze.getChamber(7, 7)));
+
+        mainDisplayer.newScreen(players.get(0).getAround(), new Point(0,0));
+        mainDisplayer.newScreen(players.get(1).getAround(), new Point(330,0));
+
         mDetector = new GestureDetectorCompat(this, new MyGestureListener());
     }
 
@@ -45,14 +56,13 @@ public class MainActivity extends AppCompatActivity{
             double minim = 1000;
 
             for(int i = 0; i < distances.length; i++){
-                Chamber pChamber = getPlayers().get(i).getLocation();
-                distances[i] = Math.hypot(pChamber.getScreenX() - event1.getX(), pChamber.getScreenY() - event1.getY());
+                distances[i] = getPlayers().get(i).getAround().calculateDistance(event1.getX(), event1.getY());
                 if(distances[i] < minim){
                     minim = distances[i];
                     move = getPlayers().get(i);
                 }
             }
-
+            Log.d(DEBUG_TAG, "distances: " + distances[0] + " " + distances[1]);
             Arrays.sort(distances);
             if(distances.length > 1 && distances[0] * 2 > distances [1]){
                 return true;
@@ -75,8 +85,6 @@ public class MainActivity extends AppCompatActivity{
                     move.tryUp();
                 }
             }
-            Log.d(DEBUG_TAG, "velocity: " + velocityX + " " + velocityY);
-            Log.d(DEBUG_TAG, "move: " + move.getLocation().getX() + " " + move.getLocation().getY());
             return true;
         }
     }

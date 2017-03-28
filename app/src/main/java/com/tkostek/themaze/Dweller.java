@@ -14,11 +14,10 @@ public class Dweller {
     private String pictureName;
     private Perimeter around;
 
-    public Dweller(Chamber location, Perimeter around, BitmapManager mgr){
-        setAround(around);
+    public Dweller(Chamber location){
+        setAround(new Perimeter());
         setLocation(location);
         around.setLocation(location);
-        around.setBmpMan(mgr);
         setVisible(false);
     }
 
@@ -89,28 +88,23 @@ public class Dweller {
         }
 
         setLocation(getLocation().getNeighbour(direction));
-        getAround().invalidate();
-        Log.d("move", "OK");
+        getAround().redraw();
         return true;
     }
 
     public boolean tryUp(){
-        Log.d("move", "tryUp");
         return tryMove(0);
     }
 
     public boolean tryRight(){
-        Log.d("move", "tryRight");
         return tryMove(1);
     }
 
     public boolean tryDown(){
-        Log.d("move", "tryDown");
         return tryMove(2);
     }
 
     public boolean tryLeft(){
-        Log.d("move", "tryLeft");
         return tryMove(3);
     }
 }

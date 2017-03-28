@@ -3,6 +3,7 @@ package com.tkostek.themaze;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.graphics.Point;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -15,7 +16,7 @@ public class Chamber {
 
     private Chamber[] neighbour = new Chamber[4];
     private Crossing[] crossing = new Crossing[4];
-    private int X, Y, screenX, screenY;
+    private int X, Y;
     private MapOfMaze myMap;
     private ArrayList<Dweller> inside = new ArrayList<Dweller>();
 
@@ -25,20 +26,27 @@ public class Chamber {
         setY(Y);
     }
 
-    public void printOnScreen(Canvas canvas, BitmapManager mgr){
+    public int getScreenX(int size, int relativeX, int relativeY, Point origin) {
+        return (getY() - relativeY) * size + origin.y;
+    }
+
+    public int getScreenY(int size, int relativeX, int relativeY, Point origin) {
+        return (getX() - relativeX) * size + origin.x;
+    }
+
+    public void printOnScreen(Canvas canvas, BitmapManager mgr, int relativeX, int relativeY, Point origin){
 
         int size = ((Bitmap) mgr.getImage().get("floor1")).getHeight();
         int thickness = ((Bitmap) mgr.getImage().get("horizontalWall1")).getHeight();
-        setScreenX(getY() * size);
-        setScreenY(getX() * size);
 
         Matrix leftCorner   = new Matrix();
         Matrix rightSide    = new Matrix();
         Matrix downSide     = new Matrix();
+        Point screenLoc = new Point(getScreenX(size, relativeX, relativeY, origin), getScreenY(size, relativeX, relativeY, origin));
 
-        leftCorner.postTranslate(getScreenX(), getScreenY());
-        downSide.postTranslate(getScreenX(), getScreenY() + size - thickness);
-        rightSide.postTranslate(getScreenX() + size - thickness, getScreenY());
+        leftCorner.postTranslate(screenLoc.x, screenLoc.y);
+        downSide.postTranslate(screenLoc.x, screenLoc.y + size - thickness);
+        rightSide.postTranslate(screenLoc.x + size - thickness, screenLoc.y);
         canvas.drawBitmap((Bitmap) mgr.getImage().get("floor1"), leftCorner, null);
 
         if(getCrossing(0).getState() == 0){
@@ -58,29 +66,12 @@ public class Chamber {
         }
 
         for(Dweller d: inside){
-            Log.d("player", Boolean.toString(d.isVisible()));
             if(!d.isVisible())
                 continue;
             Matrix displayDweller = new Matrix();
-            displayDweller.postTranslate(getScreenX() + d.getDispX() * size, getScreenY() + d.getDispY() * size);
+            displayDweller.postTranslate(screenLoc.x + d.getDispX() * size, screenLoc.y + d.getDispY() * size);
             canvas.drawBitmap((Bitmap) mgr.getImage().get(d.getPictureName()), displayDweller, null);
         }
-    }
-
-    public int getScreenX() {
-        return screenX;
-    }
-
-    public void setScreenX(int screenX) {
-        this.screenX = screenX;
-    }
-
-    public int getScreenY() {
-        return screenY;
-    }
-
-    public void setScreenY(int screenY) {
-        this.screenY = screenY;
     }
 
     public MapOfMaze getMyMap() {
